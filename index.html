@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Michael Holicki — Senior Solution Designer</title>
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:ital,wght@0,400;0,500;1,400&family=IBM+Plex+Sans:wght@300;400;500&display=swap" rel="stylesheet"/>
+<style>
+  :root {
+    --navy:       #042C53;
+    --navy-mid:   #0C447C;
+    --navy-light: #185FA5;
+    --steel:      #7A9BB5;
+    --charcoal:   #2C2C2A;
+    --off-white:  #E8EDF2;
+    --white:      #FFFFFF;
+    --rule:       #1A4A72;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: 'IBM Plex Sans', sans-serif;
+    background: var(--navy);
+    color: var(--off-white);
+    overflow-x: hidden;
+  }
+
+  /* ── Hex pattern background ── */
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='90' height='104'%3E%3Cpolygon points='45,2 88,26 88,78 45,102 2,78 2,26' fill='none' stroke='%230C447C' stroke-width='0.6'/%3E%3C/svg%3E");
+    opacity: 0.35;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── Layout ── */
+  .wrap { position: relative; z-index: 1; max-width: 960px; margin: 0 auto; padding: 0 32px; }
+
+  /* ── Nav ── */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(4,44,83,0.92);
+    backdrop-filter: blur(8px);
+    border-bottom: 1px solid var(--rule);
+    z-index: 100;
+    padding: 0 32px;
+  }
+  .nav-inner {
+    max-width: 960px; margin: 0 auto;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 56px;
+  }
+  .nav-brand { display: flex; align-items: center; gap: 12px; }
+  .nav-hex { width: 28px; height: 32px; }
+  .nav-name {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 14px; font-weight: 500; color: var(--white);
+  }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--steel); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .nav-links a:hover { color: var(--white); }
+
+  /* ── Hero ── */
+  .hero {
+    min-height: 100vh;
+    display: flex; align-items: center;
+    padding-top: 56px;
+    position: relative;
+  }
+  .hero-content { padding: 80px 0 60px; }
+  .hero-eyebrow {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--navy-light); margin-bottom: 20px;
+    opacity: 0; animation: fadeUp 0.6s 0.2s forwards;
+  }
+  .hero-name {
+    font-size: clamp(42px, 6vw, 72px);
+    font-weight: 500; color: var(--white);
+    line-height: 1.05; margin-bottom: 16px;
+    opacity: 0; animation: fadeUp 0.6s 0.35s forwards;
+  }
+  .hero-title {
+    font-size: clamp(16px, 2.5vw, 22px);
+    font-weight: 300; color: var(--steel);
+    margin-bottom: 28px;
+    opacity: 0; animation: fadeUp 0.6s 0.5s forwards;
+  }
+  .hero-rule {
+    width: 80px; height: 2px; background: var(--navy-light);
+    margin-bottom: 28px;
+    opacity: 0; animation: fadeUp 0.6s 0.6s forwards;
+  }
+  .hero-tagline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 16px; font-style: italic; color: var(--navy-light);
+    margin-bottom: 48px;
+    opacity: 0; animation: fadeUp 0.6s 0.7s forwards;
+  }
+  .hero-cta {
+    display: inline-flex; gap: 12px; flex-wrap: wrap;
+    opacity: 0; animation: fadeUp 0.6s 0.85s forwards;
+  }
+  .btn-primary {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 12px 24px; background: var(--navy-light);
+    color: var(--white); border: none; cursor: pointer;
+    text-decoration: none; transition: background 0.2s;
+    border-radius: 3px;
+  }
+  .btn-primary:hover { background: #1D6EC0; }
+  .btn-outline {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; letter-spacing: 0.12em; text-transform: uppercase;
+    padding: 12px 24px; background: transparent;
+    color: var(--steel); border: 1px solid var(--rule);
+    cursor: pointer; text-decoration: none; transition: all 0.2s;
+    border-radius: 3px;
+  }
+  .btn-outline:hover { border-color: var(--steel); color: var(--white); }
+
+  /* Large ghost hex top right */
+  .hero-hex-bg {
+    position: absolute; right: -60px; top: 50%;
+    transform: translateY(-50%);
+    width: 420px; height: 484px;
+    opacity: 0; animation: fadeIn 1s 1s forwards;
+    pointer-events: none;
+  }
+
+  /* ── Section base ── */
+  section {
+    padding: 96px 0;
+    border-top: 1px solid var(--rule);
+  }
+  .section-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 0.2em; text-transform: uppercase;
+    color: var(--navy-light); margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: clamp(24px, 3.5vw, 36px); font-weight: 500;
+    color: var(--white); margin-bottom: 48px;
+    line-height: 1.2;
+  }
+
+  /* ── About ── */
+  .about-grid {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 48px; align-items: start;
+  }
+  .about-text p {
+    font-size: 15px; font-weight: 300; color: var(--off-white);
+    line-height: 1.85; margin-bottom: 16px;
+  }
+  .about-stats { display: flex; flex-direction: column; gap: 16px; }
+  .stat-card {
+    background: rgba(12,68,124,0.3);
+    border: 1px solid var(--rule);
+    border-left: 3px solid var(--navy-light);
+    padding: 16px 20px;
+    border-radius: 3px;
+  }
+  .stat-value {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 28px; font-weight: 500; color: var(--white);
+    margin-bottom: 4px;
+  }
+  .stat-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; color: var(--steel);
+    text-transform: uppercase;
+  }
+
+  /* ── Experience ── */
+  .exp-list { display: flex; flex-direction: column; gap: 2px; }
+  .exp-item {
+    border: 1px solid var(--rule);
+    border-radius: 3px; overflow: hidden;
+    transition: border-color 0.2s;
+  }
+  .exp-item:hover { border-color: var(--navy-light); }
+  .exp-header {
+    display: flex; align-items: center; gap: 20px;
+    padding: 20px 24px; cursor: pointer;
+    background: rgba(4,44,83,0.5);
+    transition: background 0.2s;
+  }
+  .exp-header:hover { background: rgba(12,68,124,0.4); }
+  .exp-period {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 0.08em; color: var(--steel);
+    min-width: 100px; flex-shrink: 0;
+  }
+  .exp-role {
+    font-size: 15px; font-weight: 500; color: var(--white); flex: 1;
+  }
+  .exp-company {
+    font-size: 13px; font-weight: 300; color: var(--steel);
+    display: block; margin-top: 2px;
+  }
+  .exp-toggle {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 16px; color: var(--navy-light); flex-shrink: 0;
+    transition: transform 0.2s;
+  }
+  .exp-body {
+    padding: 0 24px 0 144px;
+    max-height: 0; overflow: hidden;
+    transition: max-height 0.3s ease, padding 0.3s ease;
+    background: rgba(4,44,83,0.3);
+  }
+  .exp-body.open { max-height: 300px; padding: 16px 24px 20px 144px; }
+  .exp-body ul { list-style: none; }
+  .exp-body ul li {
+    font-size: 13px; font-weight: 300; color: var(--off-white);
+    line-height: 1.7; padding: 3px 0;
+    display: flex; gap: 10px;
+  }
+  .exp-body ul li::before {
+    content: '—'; color: var(--navy-light);
+    font-family: 'IBM Plex Mono', monospace;
+    flex-shrink: 0;
+  }
+
+  /* ── Skills ── */
+  .skills-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px;
+  }
+  .skill-card {
+    background: rgba(12,68,124,0.2);
+    border: 1px solid var(--rule);
+    border-top: 2px solid var(--navy-light);
+    padding: 20px; border-radius: 3px;
+    transition: border-color 0.2s, background 0.2s;
+  }
+  .skill-card:hover {
+    background: rgba(12,68,124,0.35);
+    border-color: var(--navy-light);
+  }
+  .skill-card-title {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--navy-light); margin-bottom: 12px;
+  }
+  .skill-tags { display: flex; flex-wrap: wrap; gap: 6px; }
+  .tag {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; letter-spacing: 0.06em;
+    padding: 4px 9px; border: 1px solid var(--rule);
+    color: var(--off-white); border-radius: 2px;
+    background: rgba(4,44,83,0.5);
+  }
+
+  /* ── Contact ── */
+  .contact-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px;
+  }
+  .contact-intro p {
+    font-size: 15px; font-weight: 300; color: var(--off-white);
+    line-height: 1.85; margin-bottom: 24px;
+  }
+  .contact-detail {
+    display: flex; align-items: center; gap: 14px; margin-bottom: 16px;
+  }
+  .contact-icon {
+    width: 36px; height: 36px; border: 1px solid var(--rule);
+    border-radius: 3px; display: flex; align-items: center;
+    justify-content: center; flex-shrink: 0;
+  }
+  .contact-icon svg { width: 16px; height: 16px; fill: none; stroke: var(--navy-light); stroke-width: 1.5; }
+  .contact-detail-text a, .contact-detail-text span {
+    font-size: 13px; color: var(--off-white); text-decoration: none;
+    transition: color 0.2s;
+  }
+  .contact-detail-text a:hover { color: var(--white); }
+  .contact-detail-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9px; letter-spacing: 0.1em; color: var(--steel);
+    text-transform: uppercase; display: block; margin-bottom: 2px;
+  }
+
+  /* ── Footer ── */
+  footer {
+    border-top: 2px solid var(--navy-mid);
+    padding: 28px 0;
+    position: relative; z-index: 1;
+  }
+  .footer-inner {
+    max-width: 960px; margin: 0 auto; padding: 0 32px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .footer-left { display: flex; align-items: center; gap: 12px; }
+  .footer-hex { width: 22px; height: 25px; }
+  .footer-name {
+    font-family: 'IBM Plex Sans', sans-serif;
+    font-size: 12px; font-weight: 500; color: var(--steel);
+  }
+  .footer-right {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--rule); letter-spacing: 0.08em;
+    font-style: italic;
+  }
+
+  /* ── Animations ── */
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to   { opacity: 1; transform: translateY(0); }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; } to { opacity: 0.07; }
+  }
+
+  /* ── Scroll reveal ── */
+  .reveal {
+    opacity: 0; transform: translateY(24px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.visible { opacity: 1; transform: translateY(0); }
+
+  /* ── Responsive ── */
+  @media (max-width: 680px) {
+    .about-grid, .contact-grid, .skills-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+    .hero-hex-bg { display: none; }
+    .exp-body.open { padding-left: 24px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- Nav -->
+<nav>
+  <div class="nav-inner">
+    <div class="nav-brand">
+      <svg class="nav-hex" viewBox="0 0 90 104" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="45,3 87,26 87,78 45,101 3,78 3,26" stroke="white" stroke-width="3" fill="none"/>
+        <text x="45" y="63" text-anchor="middle" font-family="Consolas,monospace" font-size="26" font-weight="bold" fill="white" letter-spacing="3">MH</text>
+      </svg>
+      <span class="nav-name">Michael Holicki</span>
+    </div>
+    <div class="nav-links">
+      <a href="#about">About</a>
+      <a href="#experience">Experience</a>
+      <a href="#skills">Skills</a>
+      <a href="#contact">Contact</a>
+    </div>
+  </div>
+</nav>
+
+<!-- Hero -->
+<section class="hero" id="home">
+  <div class="wrap" style="width:100%;position:relative;">
+    <div class="hero-content">
+      <div class="hero-eyebrow">Senior Solution Designer · Automated Intralogistics</div>
+      <h1 class="hero-name">Michael<br>Holicki</h1>
+      <p class="hero-title">Designing automated logistics solutions<br>from concept to contract</p>
+      <div class="hero-rule"></div>
+      <p class="hero-tagline">— Everything is Logistics</p>
+      <div class="hero-cta">
+        <a href="#experience" class="btn-primary">View experience</a>
+        <a href="#contact" class="btn-outline">Get in touch</a>
+      </div>
+    </div>
+    <svg class="hero-hex-bg" viewBox="0 0 420 484" fill="none" xmlns="http://www.w3.org/2000/svg">
+      <polygon points="210,10 410,120 410,364 210,474 10,364 10,120" stroke="white" stroke-width="1.5" fill="none"/>
+      <polygon points="210,50 370,142 370,322 210,414 50,322 50,142" stroke="white" stroke-width="1" fill="none"/>
+      <polygon points="210,90 330,164 330,280 210,354 90,280 90,164" stroke="white" stroke-width="0.5" fill="none"/>
+      <text x="210" y="262" text-anchor="middle" font-family="Consolas,monospace" font-size="64" font-weight="bold" fill="white" letter-spacing="6" opacity="0.6">MH</text>
+    </svg>
+  </div>
+</section>
+
+<!-- About -->
+<section id="about">
+  <div class="wrap">
+    <div class="section-label reveal">About</div>
+    <h2 class="section-title reveal">Engineering clarity<br>in complex logistics</h2>
+    <div class="about-grid">
+      <div class="about-text reveal">
+        <p>I am a Senior Solution Designer with over 16 years of experience in automated integrated intralogistics. Based in Denmark, I design, calculate, and present large-scale warehouse automation solutions for clients across Scandinavia and Germany.</p>
+        <p>My work spans the full project lifecycle — from initial data analysis and concept design through to commercial negotiation and handover to project management. I have delivered solutions up to €50M in value as General Contractor in highly international environments.</p>
+        <p>Previously I spent seven years in Southeast Asia as Sales Manager and Project Engineer at SSI Schäfer, covering Singapore, Malaysia, India, Thailand, Indonesia, the Philippines, Taiwan and South Korea.</p>
+      </div>
+      <div class="about-stats reveal">
+        <div class="stat-card">
+          <div class="stat-value">16+</div>
+          <div class="stat-label">Years in intralogistics</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">€50M</div>
+          <div class="stat-label">Max solution value as GC</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">10+</div>
+          <div class="stat-label">Countries delivered</div>
+        </div>
+        <div class="stat-card">
+          <div class="stat-value">4</div>
+          <div class="stat-label">Major automation verticals</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Experience -->
+<section id="experience">
+  <div class="wrap">
+    <div class="section-label reveal">Experience</div>
+    <h2 class="section-title reveal">Professional history</h2>
+    <div class="exp-list reveal">
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <span class="exp-period">2022 – Present</span>
+          <div>
+            <div class="exp-role">Senior Solution Designer</div>
+            <span class="exp-company">Koeber Supply Chain AS, Denmark</span>
+          </div>
+          <span class="exp-toggle">+</span>
+        </div>
+        <div class="exp-body">
+          <ul>
+            <li>Projects across Scandinavia (excl. Denmark) and Germany in advisory capacity</li>
+            <li>Planning, design, and calculation of automated logistics facilities</li>
+            <li>Customer presentations, data analysis, commercial negotiations</li>
+            <li>Handover to project management at contract signing</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <span class="exp-period">2019 – 2022</span>
+          <div>
+            <div class="exp-role">Senior Application Engineer</div>
+            <span class="exp-company">SSI Schäfer Hub Nordic</span>
+          </div>
+          <span class="exp-toggle">+</span>
+        </div>
+        <div class="exp-body">
+          <ul>
+            <li>Projects in Sweden, Finland and Ukraine</li>
+            <li>Market sectors: E-Commerce, Industry, Food &amp; Beverage, Retail</li>
+            <li>Pallet automation, light goods automation, case &amp; piece picking</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <span class="exp-period">2012 – 2019</span>
+          <div>
+            <div class="exp-role">Sales Manager &amp; Project Engineer</div>
+            <span class="exp-company">SSI Schäfer Pte Ltd, Southeast Asia</span>
+          </div>
+          <span class="exp-toggle">+</span>
+        </div>
+        <div class="exp-body">
+          <ul>
+            <li>Projects in Singapore, Malaysia, India, Thailand, Indonesia, Philippines, Taiwan, South Korea</li>
+            <li>Full lifecycle: planning, design, calculation, negotiation, handover</li>
+            <li>Solutions up to €50M as General Contractor in international environments</li>
+            <li>Sectors: Industrial, E-Commerce, Retail, Food &amp; Beverage, Pharma</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <span class="exp-period">2010 – 2012</span>
+          <div>
+            <div class="exp-role">Project Engineer</div>
+            <span class="exp-company">SSI Schäfer Noell GmbH, Germany</span>
+          </div>
+          <span class="exp-toggle">+</span>
+        </div>
+        <div class="exp-body">
+          <ul>
+            <li>Engineering of automated intralogistics facilities</li>
+            <li>Technical design and project coordination</li>
+          </ul>
+        </div>
+      </div>
+
+      <div class="exp-item">
+        <div class="exp-header" onclick="toggleExp(this)">
+          <span class="exp-period">2007 – 2010</span>
+          <div>
+            <div class="exp-role">Logistics System Planner</div>
+            <span class="exp-company">Gebhardt Fördertechnik GmbH, Germany</span>
+          </div>
+          <span class="exp-toggle">+</span>
+        </div>
+        <div class="exp-body">
+          <ul>
+            <li>System planning for conveyor and logistics automation projects</li>
+          </ul>
+        </div>
+      </div>
+
+    </div>
+  </div>
+</section>
+
+<!-- Skills -->
+<section id="skills">
+  <div class="wrap">
+    <div class="section-label reveal">Skills</div>
+    <h2 class="section-title reveal">Core competencies</h2>
+    <div class="skills-grid">
+      <div class="skill-card reveal">
+        <div class="skill-card-title">Solution design</div>
+        <div class="skill-tags">
+          <span class="tag">Pallet automation</span>
+          <span class="tag">Light goods</span>
+          <span class="tag">Case picking</span>
+          <span class="tag">Piece picking</span>
+          <span class="tag">WMS integration</span>
+          <span class="tag">ERP connectivity</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title">Commercial</div>
+        <div class="skill-tags">
+          <span class="tag">Solution calculation</span>
+          <span class="tag">€50M+ projects</span>
+          <span class="tag">Negotiation</span>
+          <span class="tag">Customer presentations</span>
+          <span class="tag">General Contractor</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title">Software</div>
+        <div class="skill-tags">
+          <span class="tag">AutoCAD</span>
+          <span class="tag">Navis</span>
+          <span class="tag">3ds Max</span>
+          <span class="tag">Tarakos 3D</span>
+          <span class="tag">MS Project</span>
+          <span class="tag">MS Office</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title">Project delivery</div>
+        <div class="skill-tags">
+          <span class="tag">3D visualisation</span>
+          <span class="tag">Data analysis</span>
+          <span class="tag">International PM</span>
+          <span class="tag">Supplier coordination</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title">Languages</div>
+        <div class="skill-tags">
+          <span class="tag">German — native</span>
+          <span class="tag">English — professional</span>
+        </div>
+      </div>
+      <div class="skill-card reveal">
+        <div class="skill-card-title">Education</div>
+        <div class="skill-tags">
+          <span class="tag">Dipl.-Wirtschaftsing.</span>
+          <span class="tag">Industrial engineering</span>
+          <span class="tag">Automation systems</span>
+          <span class="tag">Hochschule Harz</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Contact -->
+<section id="contact">
+  <div class="wrap">
+    <div class="section-label reveal">Contact</div>
+    <h2 class="section-title reveal">Get in touch</h2>
+    <div class="contact-grid">
+      <div class="contact-intro reveal">
+        <p>I am available for solution design engagements, consulting, and project collaboration across Scandinavia and Germany. If you have an intralogistics challenge that requires a structured, data-driven approach — let's talk.</p>
+        <div class="contact-detail">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+          </div>
+          <div class="contact-detail-text">
+            <span class="contact-detail-label">Email</span>
+            <a href="mailto:michaelholickidrsd@gmail.com">michaelholickidrsd@gmail.com</a>
+          </div>
+        </div>
+        <div class="contact-detail">
+          <div class="contact-icon">
+            <svg viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          </div>
+          <div class="contact-detail-text">
+            <span class="contact-detail-label">Location</span>
+            <span>Hadsund, Denmark</span>
+          </div>
+        </div>
+      </div>
+      <div class="reveal" style="display:flex;flex-direction:column;justify-content:center;align-items:center;padding:40px;">
+        <svg width="120" height="138" viewBox="0 0 90 104" fill="none" xmlns="http://www.w3.org/2000/svg">
+          <polygon points="45,3 87,26 87,78 45,101 3,78 3,26" stroke="#185FA5" stroke-width="2" fill="none"/>
+          <text x="45" y="63" text-anchor="middle" font-family="Consolas,monospace" font-size="26" font-weight="bold" fill="#185FA5" letter-spacing="3">MH</text>
+        </svg>
+        <p style="font-family:'IBM Plex Mono',monospace;font-size:11px;color:var(--steel);margin-top:20px;letter-spacing:0.1em;font-style:italic;">Everything is Logistics</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- Footer -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-left">
+      <svg class="footer-hex" viewBox="0 0 90 104" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <polygon points="45,3 87,26 87,78 45,101 3,78 3,26" stroke="#7A9BB5" stroke-width="3" fill="none"/>
+        <text x="45" y="63" text-anchor="middle" font-family="Consolas,monospace" font-size="26" font-weight="bold" fill="#7A9BB5" letter-spacing="3">MH</text>
+      </svg>
+      <span class="footer-name">Michael Holicki · Senior Solution Designer</span>
+    </div>
+    <div class="footer-right">Everything is Logistics</div>
+  </div>
+</footer>
+
+<script>
+function toggleExp(header) {
+  const body = header.nextElementSibling;
+  const toggle = header.querySelector('.exp-toggle');
+  const isOpen = body.classList.contains('open');
+  document.querySelectorAll('.exp-body').forEach(b => b.classList.remove('open'));
+  document.querySelectorAll('.exp-toggle').forEach(t => { t.textContent = '+'; t.style.transform = ''; });
+  if (!isOpen) {
+    body.classList.add('open');
+    toggle.textContent = '−';
+  }
+}
+
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      setTimeout(() => entry.target.classList.add('visible'), i * 80);
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>
